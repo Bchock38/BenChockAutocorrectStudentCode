@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Autocorrect
@@ -17,10 +20,33 @@ public class Autocorrect {
      * @param words The dictionary of acceptable words.
      * @param threshold The maximum number of edits a suggestion can have.
      */
+    private String[] words;
+    private int threshold;
     public Autocorrect(String[] words, int threshold) {
-
+        this.words = words;
+        this.threshold = threshold;
     }
 
+    public int findLD (String n, String m){
+        int[][] LD = new int[n.length()+1][m.length()+1];
+        for (int i = 0; i < n.length(); i++){
+            for (int j = 0; j < m.length(); j++){
+                if (i == 0){
+                    LD[i][j] = j;
+                }
+                else if (j == 0){
+                    LD[i][j] = i;
+                }
+                else if (n.charAt(i) == m.charAt(j)){
+                    LD[i][j] = LD[i-1][j-1];
+                }
+                else{
+                    LD[i][j] = 1 + Math.min(LD[i-1][j], Math.min(LD[i][j-1],LD[i-1][j-1]));
+                }
+            }
+        }
+        return LD[n.length()][m.length()];
+    }
     /**
      * Runs a test from the tester file, AutocorrectTester.
      * @param typed The (potentially) misspelled word, provided by the user.
@@ -28,8 +54,21 @@ public class Autocorrect {
      * to threshold, sorted by edit distnace, then sorted alphabetically.
      */
     public String[] runTest(String typed) {
-
-        return new String[0];
+        ArrayList<LDword> holder = new ArrayList<LDword>();
+        int LD = 0;
+        for (int i = 0; i < words.length; i++){
+            LD = findLD(typed, words[i]);
+            if (LD < threshold){
+                holder.add(new LDword(LD,i));
+            }
+            holder.sort(Comparator.comparing(LDword::getLD));
+        }
+        String[] close = new String[holder.size()];
+        for (int i = 0; i < close.length; i++){
+            close[i] = words[holder.get(i).getLoc()];
+            System.out.println(close[i]);
+        }
+        return close;
     }
 
 
