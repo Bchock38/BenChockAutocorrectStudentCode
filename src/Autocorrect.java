@@ -29,19 +29,19 @@ public class Autocorrect {
 
     public int findLD (String n, String m){
         int[][] LD = new int[n.length()+1][m.length()+1];
+        for (int i = 0; i <= n.length(); i++){
+            LD[i][0] = i;
+        }
+        for (int j = 0; j <= m.length(); j++){
+            LD[0][j] = j;
+        }
         for (int i = 0; i < n.length(); i++){
             for (int j = 0; j < m.length(); j++){
-                if (i == 0){
-                    LD[i][j] = j;
-                }
-                else if (j == 0){
-                    LD[i][j] = i;
-                }
-                else if (n.charAt(i) == m.charAt(j)){
-                    LD[i][j] = LD[i-1][j-1];
+                if (n.charAt(i) == m.charAt(j)){
+                    LD[i+1][j+1] = LD[i][j];
                 }
                 else{
-                    LD[i][j] = 1 + Math.min(LD[i-1][j], Math.min(LD[i][j-1],LD[i-1][j-1]));
+                    LD[i+1][j+1] = 1 + Math.min(LD[i][j+1], Math.min(LD[i+1][j],LD[i][j]));
                 }
             }
         }
@@ -56,13 +56,14 @@ public class Autocorrect {
     public String[] runTest(String typed) {
         ArrayList<LDword> holder = new ArrayList<LDword>();
         int LD = 0;
+        Arrays.sort(words);
         for (int i = 0; i < words.length; i++){
             LD = findLD(typed, words[i]);
-            if (LD < threshold){
+            if (LD <= threshold){
                 holder.add(new LDword(LD,i));
             }
-            holder.sort(Comparator.comparing(LDword::getLD));
         }
+        holder.sort(Comparator.comparing(LDword::getLD));
         String[] close = new String[holder.size()];
         for (int i = 0; i < close.length; i++){
             close[i] = words[holder.get(i).getLoc()];
