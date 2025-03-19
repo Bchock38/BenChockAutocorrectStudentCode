@@ -58,16 +58,17 @@ public class Autocorrect {
         int LD = 0;
         Arrays.sort(words);
         for (int i = 0; i < words.length; i++){
-            LD = findLD(typed, words[i]);
-            if (LD <= threshold){
-                holder.add(new LDword(LD,i));
+            if (words[i].length() <= typed.length()+threshold){
+                LD = findLD(typed, words[i]);
+                if (LD <= threshold){
+                    holder.add(new LDword(LD,i));
+                }
             }
         }
         holder.sort(Comparator.comparing(LDword::getLD));
         String[] close = new String[holder.size()];
         for (int i = 0; i < close.length; i++){
             close[i] = words[holder.get(i).getLoc()];
-            System.out.println(close[i]);
         }
         return close;
     }
