@@ -18,4 +18,4 @@ l = length of dictionary
 k = length of close strings array
 
 Overall runtime
-O(n*m + l + k)
+O((n*m)*l + k)
