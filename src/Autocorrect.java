@@ -37,24 +37,31 @@ public class Autocorrect {
     public static void main(String[] args) {
         Autocorrect auto = new Autocorrect("large", 2);
         boolean run = true;
+        // Infinitely prompt for a word
         while (run){
             auto.getInput();
         }
     }
 
     public void getInput(){
+        // Intialize Scanner
         Scanner input = new Scanner(System.in);
+        // Prompt User for a word
         System.out.println("Enter a Word: ");
         String misspelled = input.nextLine();
+        // Return word typed back to user
         System.out.println("You typed: " + misspelled);
+        // If word is spelled correctly end
         if (wordSet.contains(misspelled)){
             System.out.println("~~~~~~~~");
         }
         else{
             String[] close = runLD(misspelled,2);
+            // If no words in a LD distance of 2 are found return no matches found
             if (close.length == 0){
                 System.out.println("No Matches Found.");
             }
+            // Return up to five possible correct spellings
             else{
                 System.out.println("Did you mean ...");
                 for (int i = 0; i<5 && i < close.length; i++) {
