@@ -1,0 +1,21 @@
+GetInput
+Asks for misspelled word and checks if it's in dictionary. Also calls Run LD and returns close words.
+Uses hashset to check dictionary in constant time. Runs everything else in constant time.
+Runtime: O(1)
+
+
+Find LD
+Goes through a whole 2D Array made by length of 2 words being compared
+Runtime: 0(n*m)
+m = length of word 1
+n = length of word 2
+
+Run LD
+Goes through all words in dictionary skipping words too big or small
+Also goes through Array of close words to turn it from dictionary location to get actual strings
+Runtime: O(l + k)
+l = length of dictionary
+k = length of close strings array
+
+Overall runtime
+O(n*m + l + k)
